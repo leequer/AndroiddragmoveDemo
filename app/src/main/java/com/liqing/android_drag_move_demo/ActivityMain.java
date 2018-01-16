@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 public class ActivityMain extends Activity {
     private ImageView mImage;
     private String tag = "ActivityMain";
+    private String tag1 = "A";
     private long mBeagin;
     private long mEnd;
     private boolean mdispatchTouchEvent = false;
@@ -80,6 +81,8 @@ public class ActivityMain extends Activity {
             Log.e(tag, "mImage ontouch");
             int x = (int) event.getX();
             int y = (int) event.getY();
+            Log.e(tag, "mImage ontouch x"+x);
+            Log.e(tag, "mImage ontouch y"+y);
             switch (event.getAction()) {
 
                 case MotionEvent.ACTION_DOWN:
@@ -106,6 +109,11 @@ public class ActivityMain extends Activity {
 
                         mdispatchTouchEvent = true;
 
+
+                        Log.e(tag, "mImage onmove x"+(x - mCurrentX));
+                        Log.e(tag, "mImage onmove y"+(y - mCurrentY));
+
+
                         mImage.offsetLeftAndRight(x - mCurrentX);
                         mImage.offsetTopAndBottom(y - mCurrentY);
 
@@ -122,7 +130,7 @@ public class ActivityMain extends Activity {
                         _scale.setFillAfter(true);
                         mImage.startAnimation(_scale);
 
-                        if (!inRangeOfView(mImage1, event)) {
+                        if (myInRangeOfView(mImage1, event)) {
                             Log.e(tag, "if");
                             //覆盖image1
                             mImage.layout((int) mImage1.getX(), (int) mImage1.getY(), (int) mImage1.getX() + mImage1.getWidth(), mImage1.getHeight());
@@ -148,11 +156,44 @@ public class ActivityMain extends Activity {
     private boolean inRangeOfView(View view, MotionEvent ev) {
         int[] location = new int[2];
         view.getLocationOnScreen(location);
-        int x = location[0];
-        int y = location[1];
+        int x = location[0];//整个屏幕的x位置
+        int y = location[1];//整个屏幕的y位置
+        Log.e(tag1,"ev.getX()"+ev.getX());//获取点击事件相对控件左边的x轴坐标，即点击事件距离控件左边的距离
+        Log.e(tag1,"ev.getY()"+ev.getY());
+        Log.e(tag1,"x"+x);
+        Log.e(tag1,"getx"+view.getX());//相对父容器的x位置
+        Log.e(tag1,"y"+y);
+        Log.e(tag1,"getY"+view.getY());//相对父容器的y位置
+        Log.e(tag1,"view.getWidth()"+view.getWidth());
+        Log.e(tag1,"view.getheight()"+view.getHeight());
         if (ev.getX() < x || ev.getX() > (x + view.getWidth()) || ev.getY() < y || ev.getY() > (y + view.getHeight())) {
             return false;
         }
         return true;
+    }
+
+    private boolean myInRangeOfView(View view, MotionEvent ev) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        int x = location[0];//整个屏幕的x位置
+        int y = location[1];//整个屏幕的y位置
+        //getRawX()：获取点击事件相对整个屏幕左边的x轴坐标，即点击事件距离整个屏幕左边的距离
+        //getRawY()：获取点击事件相对整个屏幕顶边的y轴坐标，即点击事件距离整个屏幕顶边的距离
+        Log.e(tag1,"ev.getX()"+ev.getX());//获取点击事件相对控件左边的x轴坐标，即点击事件距离控件左边的距离
+        Log.e(tag1,"ev.getY()"+ev.getY());
+        Log.e(tag1,"x"+x);
+        Log.e(tag1,"y"+y);
+        //getRawX()：获取点击事件相对整个屏幕左边的x轴坐标，即点击事件距离整个屏幕左边的距离
+        //getRawY()：获取点击事件相对整个屏幕顶边的y轴坐标，即点击事件距离整个屏幕顶边的距离
+        Log.e(tag1,"getRawX()"+ev.getRawX());
+        Log.e(tag1,"getRawY()"+ev.getRawY());
+        Log.e(tag1,"getx"+view.getX());//相对父容器的x位置
+        Log.e(tag1,"getY"+view.getY());//相对父容器的y位置
+        Log.e(tag1,"view.getWidth()"+view.getWidth());
+        Log.e(tag1,"view.getheight()"+view.getHeight());
+        if (ev.getRawX()>x&&ev.getRawY()<(y+view.getHeight())) {
+            return true;
+        }
+        return false;
     }
 }
