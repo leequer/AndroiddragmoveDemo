@@ -22,6 +22,7 @@ public class ActivityMain extends Activity {
     private int mCurrentY;
     private int mImageOrginY;
     private int mImageOrginX;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,77 +30,76 @@ public class ActivityMain extends Activity {
         mImage = findViewById(R.id.imageView);
         mImageOrginX = (int) mImage.getX();
         mImageOrginY = (int) mImage.getY();
-        mImage.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+        mImage.setOnTouchListener(mImageViewOnTouchListener);
+        mImage.setOnClickListener(mImageViewOnclickListener);
+    }
 
-                Log.e(tag, "mImage ontouch");
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-                switch (event.getAction()) {
 
-                    case MotionEvent.ACTION_DOWN:
-                        mdispatchTouchEvent = false;
-                        Log.e(tag, "mImage down");
-                        mBeagin = System.currentTimeMillis();
-                        mCurrentX = x;
-                        mCurrentY = y;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.e(tag, "mImage move");
-                        mEnd = System.currentTimeMillis();
-                        long _duration = mEnd - mBeagin;
-                        if (_duration >= 600) {
+    View.OnClickListener mImageViewOnclickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(ActivityMain.this, "请选择照片", Toast.LENGTH_SHORT).show();
+        }
+    };
 
-                            if (!mdispatchTouchEvent) {
-                                ScaleAnimation _scale = new ScaleAnimation(1f, 0.5f, 1f, 0.5f, mCurrentX, mCurrentY);
-                                _scale.setDuration(200);
-                                _scale.setFillAfter(true);
-                                mImage.startAnimation(_scale);
-                            }
+    View.OnTouchListener mImageViewOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
 
-                            mdispatchTouchEvent = true;
+            Log.e(tag, "mImage ontouch");
+            int x = (int) event.getX();
+            int y = (int) event.getY();
+            switch (event.getAction()) {
 
-                            mImage.offsetLeftAndRight(x - mCurrentX);
-                            mImage.offsetTopAndBottom(y - mCurrentY);
+                case MotionEvent.ACTION_DOWN:
+                    mdispatchTouchEvent = false;
+                    Log.e(tag, "mImage down");
+                    mBeagin = System.currentTimeMillis();
+                    mCurrentX = x;
+                    mCurrentY = y;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    Log.e(tag, "mImage move");
+                    mEnd = System.currentTimeMillis();
+                    long _duration = mEnd - mBeagin;
+                    if (_duration >= 600) {
 
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.e(tag, "mImage up");
-                        if (mdispatchTouchEvent) {
-                            //放大
-                            ScaleAnimation _scale = new ScaleAnimation(0.5f, 1f, 0.5f, 1f);
+                        if (!mdispatchTouchEvent) {
+                            ScaleAnimation _scale = new ScaleAnimation(1f, 0.5f, 1f, 0.5f, mCurrentX, mCurrentY);
                             _scale.setDuration(200);
                             _scale.setFillAfter(true);
                             mImage.startAnimation(_scale);
-
-                            //回到原始位置
-                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImage.getLayoutParams();
-                            //导包要导相对布局的包x
-                            params.leftMargin = mImageOrginX;
-                            params.topMargin = mImageOrginY;
-                            mImage.setLayoutParams(params);
-                            mImage.layout(x, y, mImage.getWidth(), mImage.getHeight());
                         }
-                        return mdispatchTouchEvent;
-                }
 
-                return false
-                        ;
+                        mdispatchTouchEvent = true;
+
+                        mImage.offsetLeftAndRight(x - mCurrentX);
+                        mImage.offsetTopAndBottom(y - mCurrentY);
+
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Log.e(tag, "mImage up");
+                    if (mdispatchTouchEvent) {
+                        //放大
+                        ScaleAnimation _scale = new ScaleAnimation(0.5f, 1f, 0.5f, 1f);
+                        _scale.setDuration(200);
+                        _scale.setFillAfter(true);
+                        mImage.startAnimation(_scale);
+
+                        //回到原始位置
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImage.getLayoutParams();
+                        //导包要导相对布局的包x
+                        params.leftMargin = mImageOrginX;
+                        params.topMargin = mImageOrginY;
+                        mImage.setLayoutParams(params);
+                        mImage.layout(x, y, mImage.getWidth(), mImage.getHeight());
+                    }
+                    return mdispatchTouchEvent;
             }
-        });
 
-        mImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(ActivityMain.this, "请选择照片", Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
-
-
-    }
+            return false
+                    ;
+        }
+    };
 }
