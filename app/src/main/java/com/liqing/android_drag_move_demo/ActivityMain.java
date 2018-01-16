@@ -13,10 +13,11 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 
 /**
- *
  * 单击，弹出提示。
  * 长按，缩小，跟着指头移动。
  * 松手恢复到原位和原来大小
+ * <p>
+ * +换位置
  */
 public class ActivityMain extends Activity {
     private ImageView mImage;
@@ -28,6 +29,11 @@ public class ActivityMain extends Activity {
     private int mCurrentY;
     private int mImageOrginY;
     private int mImageOrginX;
+    private ImageView mImage1;
+    private int mImage1OrginX;
+    private int mImage1OrginY;
+    private RelativeLayout mlayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +44,13 @@ public class ActivityMain extends Activity {
         mImageOrginY = (int) mImage.getY();
         mImage.setOnTouchListener(mImageViewOnTouchListener);
         mImage.setOnClickListener(mImageViewOnclickListener);
+
+        mImage1 = findViewById(R.id.imageView2);
+        mImage1OrginX = (int) mImage1.getX();
+        mImage1OrginY = (int) mImage1.getY();
+
+        mlayout = findViewById(R.id.id_root);
+        // mlayout.setOnTouchListener(mLayoutOnTouch);
     }
 
 
@@ -47,6 +60,18 @@ public class ActivityMain extends Activity {
             Toast.makeText(ActivityMain.this, "请选择照片", Toast.LENGTH_SHORT).show();
         }
     };
+
+//    private View.OnTouchListener mLayoutOnTouch = new View.OnTouchListener() {
+//        @Override
+//        public boolean onTouch(View v, MotionEvent event) {
+//            int x = (int) event.getX();
+//            int y = (int) event.getY();
+//            if (inRangeOfView(mImage1,event)){
+//                Log.e(tag,"onclick mimage 1 ");
+//            }
+//            return false;
+//        }
+//    };
 
     View.OnTouchListener mImageViewOnTouchListener = new View.OnTouchListener() {
         @Override
@@ -58,6 +83,8 @@ public class ActivityMain extends Activity {
             switch (event.getAction()) {
 
                 case MotionEvent.ACTION_DOWN:
+
+
                     mdispatchTouchEvent = false;
                     Log.e(tag, "mImage down");
                     mBeagin = System.currentTimeMillis();
@@ -86,6 +113,8 @@ public class ActivityMain extends Activity {
                     break;
                 case MotionEvent.ACTION_UP:
                     Log.e(tag, "mImage up");
+
+
                     if (mdispatchTouchEvent) {
                         //放大
                         ScaleAnimation _scale = new ScaleAnimation(0.5f, 1f, 0.5f, 1f);
@@ -93,13 +122,20 @@ public class ActivityMain extends Activity {
                         _scale.setFillAfter(true);
                         mImage.startAnimation(_scale);
 
-                        //回到原始位置
-                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImage.getLayoutParams();
-                        //导包要导相对布局的包x
-                        params.leftMargin = mImageOrginX;
-                        params.topMargin = mImageOrginY;
-                        mImage.setLayoutParams(params);
-                        mImage.layout(x, y, mImage.getWidth(), mImage.getHeight());
+                        if (!inRangeOfView(mImage1, event)) {
+                            Log.e(tag, "if");
+                            //覆盖image1
+                            mImage.layout((int) mImage1.getX(), (int) mImage1.getY(), (int) mImage1.getX() + mImage1.getWidth(), mImage1.getHeight());
+                        } else {
+                            Log.e(tag, "else");
+                            //回到原始位置
+                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImage.getLayoutParams();
+                            //导包要导相对布局的包x
+                            params.leftMargin = mImageOrginX;
+                            params.topMargin = mImageOrginY;
+                            mImage.setLayoutParams(params);
+                            mImage.layout(x, y, mImage.getWidth(), mImage.getHeight());
+                        }
                     }
                     return mdispatchTouchEvent;
             }
@@ -108,4 +144,15 @@ public class ActivityMain extends Activity {
                     ;
         }
     };
+
+    private boolean inRangeOfView(View view, MotionEvent ev) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        int x = location[0];
+        int y = location[1];
+        if (ev.getX() < x || ev.getX() > (x + view.getWidth()) || ev.getY() < y || ev.getY() > (y + view.getHeight())) {
+            return false;
+        }
+        return true;
+    }
 }
