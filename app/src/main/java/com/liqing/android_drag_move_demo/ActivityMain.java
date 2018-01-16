@@ -140,14 +140,20 @@ public class ActivityMain extends Activity {
 
                             //覆盖image1
                             mImage.layout((int) mImage1.getX(), (int) mImage1.getY(), (int) mImage1.getX() + mImage1.getWidth(), mImage1.getHeight());
-////                            //换位置
-////                            mImage1.layout(mImageOrginX, mImageOrginY,  mImageOrginWith, mImageOrginHight);
-//                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImage1.getLayoutParams();
-//                            //导包要导相对布局的包x
-//                            params.leftMargin = mImageOrginX;
-//                            params.topMargin = mImageOrginY;
-//                            mImage1.setLayoutParams(params);
-//                            mImage1.layout(x, y, mImageOrginWith,mImageOrginHight);
+//                            //换位置
+//                            mImage1.layout(mImageOrginX, mImageOrginY,  mImageOrginWith, mImageOrginHight);
+//                            mImage1.postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImage1.getLayoutParams();
+//                                    //导包要导相对布局的包x
+//                                    params.leftMargin = mImageOrginX;
+//                                    params.topMargin = mImageOrginY;
+//                                    mImage1.setLayoutParams(params);
+//                                    mImage1.layout(mImageOrginX, mImageOrginY, mImageOrginWith+mImageOrginX,mImageOrginHight);
+//                                }
+//                            },2000);
+
 
 
                         } else {
