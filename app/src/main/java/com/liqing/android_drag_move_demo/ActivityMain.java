@@ -34,7 +34,8 @@ public class ActivityMain extends Activity {
     private int mImage1OrginX;
     private int mImage1OrginY;
     private RelativeLayout mlayout;
-
+    private int mImageOrginWith;
+    private int mImageOrginHight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,9 @@ public class ActivityMain extends Activity {
         mImage = findViewById(R.id.imageView);
         mImageOrginX = (int) mImage.getX();
         mImageOrginY = (int) mImage.getY();
+        mImageOrginWith = mImage.getWidth();
+        mImageOrginHight = mImage.getHeight();
+
         mImage.setOnTouchListener(mImageViewOnTouchListener);
         mImage.setOnClickListener(mImageViewOnclickListener);
 
@@ -73,6 +77,7 @@ public class ActivityMain extends Activity {
 //            return false;
 //        }
 //    };
+
 
     View.OnTouchListener mImageViewOnTouchListener = new View.OnTouchListener() {
         @Override
@@ -132,8 +137,19 @@ public class ActivityMain extends Activity {
 
                         if (myInRangeOfView(mImage1, event)) {
                             Log.e(tag, "if");
+
                             //覆盖image1
                             mImage.layout((int) mImage1.getX(), (int) mImage1.getY(), (int) mImage1.getX() + mImage1.getWidth(), mImage1.getHeight());
+////                            //换位置
+////                            mImage1.layout(mImageOrginX, mImageOrginY,  mImageOrginWith, mImageOrginHight);
+//                            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImage1.getLayoutParams();
+//                            //导包要导相对布局的包x
+//                            params.leftMargin = mImageOrginX;
+//                            params.topMargin = mImageOrginY;
+//                            mImage1.setLayoutParams(params);
+//                            mImage1.layout(x, y, mImageOrginWith,mImageOrginHight);
+
+
                         } else {
                             Log.e(tag, "else");
                             //回到原始位置
