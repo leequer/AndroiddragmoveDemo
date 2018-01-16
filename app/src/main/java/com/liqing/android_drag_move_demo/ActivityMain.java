@@ -12,6 +12,12 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 
+/**
+ *
+ * 单击，弹出提示。
+ * 长按，缩小，跟着指头移动。
+ * 松手恢复到原位和原来大小
+ */
 public class ActivityMain extends Activity {
     private ImageView mImage;
     private String tag = "ActivityMain";
