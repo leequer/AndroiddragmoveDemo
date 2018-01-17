@@ -47,39 +47,20 @@ public class ActivityMain extends Activity {
         mImageOrginWith = mImage.getWidth();
         mImageOrginHight = mImage.getHeight();
 
-        mImage.setOnTouchListener(mImageViewOnTouchListener);
-        mImage.setOnClickListener(mImageViewOnclickListener);
+        //mImage.setOnTouchListener(mImageViewOnTouchListener);
+        //mImage.setOnClickListener(mImageViewOnclickListener);
 
         mImage1 = findViewById(R.id.imageView2);
         mImage1OrginX = (int) mImage1.getX();
         mImage1OrginY = (int) mImage1.getY();
 
         mlayout = findViewById(R.id.id_root);
-        // mlayout.setOnTouchListener(mLayoutOnTouch);
+        mlayout.setOnTouchListener(mLayoutOnTouch);
     }
 
 
-    View.OnClickListener mImageViewOnclickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(ActivityMain.this, "请选择照片", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-//    private View.OnTouchListener mLayoutOnTouch = new View.OnTouchListener() {
-//        @Override
-//        public boolean onTouch(View v, MotionEvent event) {
-//            int x = (int) event.getX();
-//            int y = (int) event.getY();
-//            if (inRangeOfView(mImage1,event)){
-//                Log.e(tag,"onclick mimage 1 ");
-//            }
-//            return false;
-//        }
-//    };
-
-
-    View.OnTouchListener mImageViewOnTouchListener = new View.OnTouchListener() {
+    private boolean mInImageView=false;
+    View.OnTouchListener mLayoutOnTouch = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
@@ -92,18 +73,20 @@ public class ActivityMain extends Activity {
 
                 case MotionEvent.ACTION_DOWN:
 
-
-                    mdispatchTouchEvent = false;
-                    Log.e(tag, "mImage down");
-                    mBeagin = System.currentTimeMillis();
-                    mCurrentX = x;
-                    mCurrentY = y;
+                    mInImageView=myInRangeOfView(mImage,event);
+                    if (mInImageView) {
+                        mdispatchTouchEvent = false;
+                        Log.e(tag, "mImage down");
+                        mBeagin = System.currentTimeMillis();
+                        mCurrentX = x;
+                        mCurrentY = y;
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     Log.e(tag, "mImage move");
                     mEnd = System.currentTimeMillis();
                     long _duration = mEnd - mBeagin;
-                    if (_duration >= 600) {
+                    if (_duration >= 600&&mInImageView) {
 
                         if (!mdispatchTouchEvent) {
                             ScaleAnimation _scale = new ScaleAnimation(1f, 0.5f, 1f, 0.5f, mCurrentX, mCurrentY);
@@ -166,12 +149,14 @@ public class ActivityMain extends Activity {
                             mImage.setLayoutParams(params);
                             mImage.layout(x, y, mImage.getWidth(), mImage.getHeight());
                         }
+                    }else if (mInImageView){
+                        Toast.makeText(ActivityMain.this, "请选择照片", Toast.LENGTH_SHORT).show();
                     }
                     return mdispatchTouchEvent;
             }
 
-            return false
-                    ;
+            return true ;
+
         }
     };
 
